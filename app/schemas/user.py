@@ -4,10 +4,10 @@ from typing import Optional
 
 class OurBaseModel(BaseModel):
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UserRequest(OurBaseModel):
-    id: Optional[UUID] = uuid4
+    # id: Optional[UUID] = uuid4
     name: str
     email: EmailStr
     password: str

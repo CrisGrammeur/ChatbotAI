@@ -3,7 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.cors import CORSMiddleware
 from config.database import engine, Base
-from routers import user_route
+from routers import user_route, login_route
 # import uvicorn
 
 origins = ["*"]
@@ -11,6 +11,7 @@ Base.metadata.create_all(engine)
 
 def include_router(app):
     app.include_router(user_route)
+    app.include_router(login_route)
 
 def start_application():
     app = FastAPI(title=settings.PROJECT_NAME,version=settings.PROJECT_VERSION)

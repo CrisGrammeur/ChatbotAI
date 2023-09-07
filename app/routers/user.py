@@ -2,7 +2,8 @@ from schemas import UserRequest, UserResponse
 from sqlalchemy.orm import Session
 from config.database import get_db
 from fastapi import Depends, HTTPException, status, APIRouter
-from crud import get_user, get_user_by_email, get_users, create_user
+from crud import get_user, get_user_by_email, get_users, create_user, get_current_user
+from models import User
 
 app = APIRouter(
     tags=["Users"],
@@ -25,8 +26,15 @@ def add_user(user: UserRequest, db: Session = Depends(get_db)):
 
 # Endpoint pour récupérer un utilisateur par son ID
 @app.get("/{user_id}", status_code=status.HTTP_200_OK)
-def read_user(user_id: int, db: Session = Depends(get_db)):
+def read_user(user_id: str, db: Session = Depends(get_db)):
     db_user = get_user(db, user_id)
     if db_user is None:
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
+
+@app.put("/modify_login")
+def modify_password(nom: str, email: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    user = (db, current_user.id, nom, email)
+    if user is None:
+        raise HTTPException(status_code = 404, detail = "Non retrouvé")
+    return user
