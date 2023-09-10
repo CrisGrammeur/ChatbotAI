@@ -32,9 +32,9 @@ def read_user(user_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="User not found")
     return db_user
 
-@app.put("/modify_login")
-def modify_password(nom: str, email: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    user = (db, current_user.id, nom, email)
-    if user is None:
-        raise HTTPException(status_code = 404, detail = "Non retrouvé")
-    return user
+# @app.put("/modify_login")
+# def modify_password(nom: str, email: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+#     user = (db, current_user.id, nom, email)
+#     if user is None:
+#         raise HTTPException(status_code = 404, detail = "Non retrouvé")
+#     return user

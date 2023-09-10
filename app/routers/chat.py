@@ -1,12 +1,27 @@
+from fastapi import APIRouter, status, HTTPException, Depends
+from sqlalchemy.orm import Session
+from config.database import get_db
 
-# @app.post("/users/{user_id}/items/", response_model=schemas.Item)
-# def create_item_for_user(
-#     user_id: int, item: schemas.ItemCreate, db: Session = Depends(get_db)
-# ):
-#     return crud.create_user_item(db=db, item=item, user_id=user_id)
+from crud import get_current_user, get_chats, create_ai_chat, create_chat
+from models import User, Discussion, Chat
+from schemas import MessageRequest
 
+app = APIRouter(
+    tags=["Messages"],
+    prefix="/message"
+)
 
-# @app.get("/items/", response_model=list[schemas.Item])
-# def read_items(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-#     items = crud.get_items(db, skip=skip, limit=limit)
-#     return items
+@app.get("/", status_code=status.HTTP_200_OK)
+def list_message(discussion_id: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    mes = get_chats(db, discussion_id)
+    return mes
+
+@app.post("/prompt", status_code=status.HTTP_201_CREATED)
+def prompt_message(discussion_id: str, message: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    prompt = create_chat(db, message, discussion_id)
+    return prompt
+
+@app.post("/prompt_ai", status_code=status.HTTP_201_CREATED)
+def response_message(chat_id: str, discussion_id: str, response: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    response = create_ai_chat(db, response, discussion_id, chat_id)
+    return response 

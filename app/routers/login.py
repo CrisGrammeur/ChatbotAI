@@ -11,7 +11,7 @@ from datetime import datetime, timedelta
 
 app = APIRouter(
     prefix='/login',
-    tags = ['log']
+    tags = ['Log']
 )
 
 @app.post("/token", response_model = Token)
