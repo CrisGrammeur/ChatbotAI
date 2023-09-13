@@ -8,11 +8,13 @@ class Chat(Base):
     __tablename__ = "chats"
 
     id = Column(String, primary_key=True, index=True, default=str(uuid4()))
-    content = Column(Text, nullable=False)
-    # description = Column(String, index=True)
+    query = Column(String, nullable=False)
+    response = Column(String, nullable=False)
     discussion_id = Column(ForeignKey("discussions.id", ondelete='CASCADE'))
-    chat_id = Column(ForeignKey("chats.id"), nullable=True)
-    is_ai = Column(Boolean, default=False)
+    is_liked = Column(Boolean, default=None)
+    # description = Column(String, index=True)
+    # chat_id = Column(ForeignKey("chats.id"), nullable=True)
+    # is_ai = Column(Boolean, default=False)
 
     discussion = relationship("Discussion")
     # chat = relationship("Chat")

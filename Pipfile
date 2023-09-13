@@ -4,17 +4,8 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-uvicorn = {extras = ["standard"], version = "*"}
-sqlalchemy = "*"
-pydantic = {extras = ["email"], version = "*"}
-alembic = "*"
-pydantic-settings = "*"
-fastapi = {extras = ["all"], version = "*"}
-jose = "*"
-pycryptodome = "*"
-cryptography = "*"
-python-jose = {extras = ["cryptography"], version = "*"}
-passlib = {extras = ["bcrypt"], version = "*"}
+langchain = "*"
+stringify = "*"
 
 [dev-packages]
 

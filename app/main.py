@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.cors import CORSMiddleware
 from config.database import engine, Base
 from routers import user_route, login_route, discussion_route, chat_route
+# from Chatbot.chat_api import app as bot_route
 # import uvicorn
 
 origins = ["*"]
@@ -14,6 +15,7 @@ def include_router(app):
     app.include_router(login_route)
     app.include_router(discussion_route)
     app.include_router(chat_route)
+    # app.include_router(bot_route)
 
 def start_application():
     app = FastAPI(title=settings.PROJECT_NAME,version=settings.PROJECT_VERSION)
