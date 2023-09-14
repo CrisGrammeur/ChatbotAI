@@ -1,10 +1,15 @@
 from sqlalchemy.orm import Session
 
-from models import Discussion
+from models import Discussion, Chat
 from schemas import DiscussionRequest
 
-def get_discussions(db: Session, user_id: str):
-    dis = db.query(Discussion).filter(Discussion.user_id == user_id).all()
+def get_discussions(db: Session, id: str):
+    dis = ( db.query(Discussion)
+                # .join(Chat)
+                .outerjoin(Chat, Discussion.id == Chat.discussion_id)
+                .filter(Discussion.user_id == id)
+                .all()
+    )
     return dis
 
 def get_discussion(db: Session, user_id: str, discussion_id: str):
