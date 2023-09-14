@@ -14,7 +14,7 @@ def get_discussion(db: Session, user_id: str, discussion_id: str):
 def create_discussion(db: Session, user_id: str, discussion: str):
     db_disc = Discussion(
         user_id=user_id,
-        title=discussion.title
+        title=discussion
     )
     db.add(db_disc)
     db.commit()
