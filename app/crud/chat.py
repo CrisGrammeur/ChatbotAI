@@ -1,5 +1,7 @@
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.orm import Session
+from datetime import date
+# from sqlalchemy import Date
 # from config.database import get_db
 # from config.settings import settings
 
@@ -7,13 +9,17 @@ from models import Chat
 from schemas import MessageRequest
 
 def get_chats(db: Session, discussion_id: str):
+    # if filter is None:
     return db.query(Chat).filter(Chat.discussion_id == discussion_id).all()
+    # else:
+    #     return db.query(Chat).filter(Chat.discussion_id == discussion_id, Chat.send_at == date).all()
 
 def create_chat(db: Session, query: str, response: str, discussion_id: str):
     db_chat = Chat(
         query = query,
         response = response,
         discussion_id = discussion_id,
+        send_at = date.today()
     )
     db.add(db_chat)
     db.commit()

@@ -1,4 +1,4 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Text, String
+from sqlalchemy import Boolean, Column, ForeignKey, Text, String, Date, text
 from sqlalchemy.orm import relationship
 from uuid import uuid4
 
@@ -12,6 +12,7 @@ class Chat(Base):
     response = Column(String, nullable=False)
     discussion_id = Column(ForeignKey("discussions.id", ondelete='CASCADE'))
     is_liked = Column(Boolean, default=None)
+    send_at = Column(Date, nullable=False, server_default=text("CURRENT_DATE"))
     # description = Column(String, index=True)
     # chat_id = Column(ForeignKey("chats.id"), nullable=True)
     # is_ai = Column(Boolean, default=False)

@@ -1,7 +1,7 @@
 from config.settings import settings
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.cors import CORSMiddleware
+# from starlette.middleware.cors import CORSMiddleware
 from config.database import engine, Base
 from routers import user_route, login_route, discussion_route, chat_route
 # from Chatbot.chat_api import app as bot_route

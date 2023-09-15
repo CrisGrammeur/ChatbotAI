@@ -1,6 +1,7 @@
 from fastapi import APIRouter, status, HTTPException, Depends
 import requests
 from sqlalchemy.orm import Session
+# from sqlalchemy import Date
 from config.database import get_db
 import json
 
@@ -19,13 +20,13 @@ def list_message(discussion_id: str, db: Session = Depends(get_db), current_user
     return mes
 
 @app.post("/prompt", status_code=status.HTTP_201_CREATED)
-def prompt_message(json_data, discussion_id: str, message: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    url='http://127.0.0.8001/chatbot'
+def prompt_message(json_data: str, discussion_id: str, message: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    url='http://127.0.0.1:8001/chatbot'
 
     data1 = {
         "collect_name": "entouragetest10",
         "query": message,
-        "json_data": json.dumps(json_data),
+        "json_data": json_data,
         "model": "gpt-4",
         "temp": 0.3,
         "templa": "As a career development expert, you need to provide a helpful and professional response to the user's question or problem. Add to your answers interesting professional profiles related to his question. Remember that you should never invent or provide professional profiles that are not in the CONTEXT provided."
@@ -36,12 +37,13 @@ def prompt_message(json_data, discussion_id: str, message: str, db: Session = De
         result = prompt.json()
         bot_response = result["bot_response"]
         answer = bot_response["answer"]
+        print("###############################", answer, str(message))
 
         response = str(answer)
 
-        create_chat(db, message, response, discussion_id)
-        return answer
-    raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
+        return create_chat(db, message, answer, discussion_id)
+    else:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST)
 
 # @app.post("/prompt_ai", status_code=status.HTTP_201_CREATED)
 # def response_message(chat_id: str, discussion_id: str, response: str, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
