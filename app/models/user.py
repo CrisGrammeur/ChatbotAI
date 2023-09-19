@@ -9,7 +9,7 @@ class User(Base):
     __tablename__ = "users"
 
     id = Column(String, primary_key=True, index=True, default=str(uuid4()))
-    name = Column(String, unique=True)
+    name = Column(String, nullable=False)
     email = Column(String, unique=True, index=True)
     hashed_password = Column(String, nullable=False)
     bio = Column(String, nullable=True)
