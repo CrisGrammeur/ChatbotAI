@@ -7,6 +7,7 @@ class OurBaseModel(BaseModel):
         from_attributes = True
 
 class addConverse(OurBaseModel):
+    chat_id: str
     query: str
     answer: str
     
@@ -14,6 +15,11 @@ class addConverse(OurBaseModel):
 class setLike(OurBaseModel):
     converse_id: str
     is_liked: bool
+    reason: str
+    
+    
+class settrash(OurBaseModel):
+    converse_id: str
 
 # To use with a postgres database
 # class DiscussionResponse(OurBaseModel):

@@ -35,8 +35,8 @@ def create_user(db: Session, user: UserRequest):
         name = user.name,
         email = user.email,
         hashed_password = hashed_password,
-        bio = "user.bio",
-        location = "user.location"
+        bio = "",
+        location = ""
     )
     db.add(db_user)
     db.commit()

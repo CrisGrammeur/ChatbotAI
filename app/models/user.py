@@ -15,6 +15,7 @@ class User(Base):
     bio = Column(String, nullable=True)
     location = Column(String, nullable=True)
     is_active = Column(Boolean, default=True)
-
+    converse = relationship("Converse", back_populates='user')
+    
     # owner = relationship("Discussion", back_populates="user")
     

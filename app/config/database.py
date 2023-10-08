@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app1.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app2.db"
 # SQLALCHEMY_DATABASE_URL = "postgresql://chat_admin:ch@tbot_23@postgresserver/chatdb"
 
 engine = create_engine(

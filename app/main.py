@@ -9,7 +9,7 @@ from routers import user_route, login_route, discussion_route, chat_route, conve
 
 origins = ["*"]
 Base.metadata.create_all(engine)
-
+  
 def include_router(app):
     app.include_router(user_route)
     app.include_router(login_route)
