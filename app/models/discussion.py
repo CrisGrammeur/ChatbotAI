@@ -1,9 +1,9 @@
-from sqlalchemy import Boolean, Column, ForeignKey, text, String, Date
+from sqlalchemy import Boolean, Column,DateTime, ForeignKey, text, String, Date
 from sqlalchemy.orm import relationship
 from uuid import uuid4
 
 from config.database import Base
-
+from datetime import datetime, timedelta
 class Discussion(Base):
     __tablename__ = "discussions"
 
@@ -15,3 +15,4 @@ class Discussion(Base):
 
     user = relationship("User")
     # chat = relationship("Chat", back_populates="discussion")
+    created_at = Column(DateTime, default=datetime.now, name="created_at")
