@@ -9,13 +9,19 @@ import datetime
 from crud import get_current_user, get_chats, create_chat, like_chat
 from models import User, Converse
 from schemas import MessageRequest
-
+import pandas as pd
+from fastapi.responses import StreamingResponse # Add to Top
+from fastapi.responses import FileResponse
+import io
+from tempfile import NamedTemporaryFile
+import csv
 app = APIRouter(
     tags=["Dashboard"],
     prefix="/dashboard"
 )
 today = datetime.date.today()
 yesterday = today - datetime.timedelta(days=1)
+
 @app.get("/userstats", status_code=status.HTTP_200_OK)
 def count_user( db: Session = Depends(get_db)):
     count = db.query(User).count()
@@ -23,7 +29,17 @@ def count_user( db: Session = Depends(get_db)):
     today_users = db.query(User).filter_by(created_at = today).all()
     today_users_count = db.query(User).filter_by(created_at = today).count()
     yesterday_users_count = db.query(User).filter_by(created_at = yesterday).count()
-    return {"user_list": users, "count": count, "today_users": today_users, "today_users_count":today_users_count, "yesterday_users_count": yesterday_users_count}
+    usr = users.reverse()
+    return {
+            "user_list": users,
+            "count": count,
+            "today_users": today_users,
+            "today_users_count":today_users_count,
+            "yesterday_users_count": yesterday_users_count
+            }
+
+
+
 @app.get("/conversestats", status_code=status.HTTP_200_OK)
 def count_converse(db: Session = Depends(get_db)):
     converses = db.query(Converse).all()
@@ -34,7 +50,43 @@ def count_converse(db: Session = Depends(get_db)):
     disliked_converse_count = db.query(Converse).filter_by(isliked = False).count()
 
     # query = len(db.query(User).all())
+    con = converses.reverse()
     return {"converses":converses,"count_converse":count_converse, "liked_converse":liked_converse,"liked_converse_count":liked_converse_count,"disliked_converse":disliked_converse, "disliked_converse_count":disliked_converse_count   }
+
+
+
+@app.get("/usertocsv",  status_code=status.HTTP_200_OK)
+def user_tocsv(db: Session = Depends(get_db)):
+    users = db.query(User).all()
+
+    # Generate the CSV file
+    with NamedTemporaryFile(delete=False, mode="w", suffix=".csv",  encoding="utf-8") as csvfile:
+        csv_writer = csv.writer(csvfile)
+        csv_writer.writerow(["Name", "Email","status" , "Registered At"])  # Add column headers
+        a = 0
+        for user in users:
+            csv_writer.writerow([user.name, user.email, user.is_active, user.created_at])  # Replace "other_field" with the actual field name
+
+    response = FileResponse(csvfile.name, media_type="text/csv")
+    response.headers["Content-Disposition"] = 'attachment; filename="user_stats.csv"'
+    return response
+
+@app.get("/conversestocsv",  status_code=status.HTTP_200_OK)
+def converse_tocsv(db: Session = Depends(get_db)):
+    converses = db.query(Converse).all()
+
+    # Generate the CSV file
+    with NamedTemporaryFile(delete=False, mode="w", suffix=".csv",  encoding="utf-8") as csvfile:
+        csv_writer = csv.writer(csvfile)
+        csv_writer.writerow(["Name", "Query","bot Answer" , "status", "reason", "Registered At"])  # Add column headers
+        a = 0
+        for converse in converses:
+            csv_writer.writerow( [converse.user_name,converse.query,converse.answer,converse.isliked,converse.raison,converse.created_at])  # Replace "other_field" with the actual field name
+
+    response = FileResponse(csvfile.name, media_type="text/csv")
+    response.headers["Content-Disposition"] = 'attachment; filename="converse_stats.csv"'
+    return response
+
 
 @app.get("/countlikes", status_code=status.HTTP_200_OK)
 def list_message1(db: Session = Depends(get_db)):
@@ -45,6 +97,9 @@ def list_message1(db: Session = Depends(get_db)):
     dislikes_count = db.query(Converse).filter_by(isliked = True).count()
     simples = db.query(Converse).count()
     return {"likes": likes,"likes_count": likes_count, "dislikes": dislikes,"dislikes_count": dislikes_count, "simples": simples  }
+
+
+
 
 @app.get("/countlikes", status_code=status.HTTP_200_OK)
 def list_message1(db: Session = Depends(get_db)):
