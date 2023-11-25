@@ -4,3 +4,4 @@ from routers.discussion import app as discussion_route
 from routers.chat import app as chat_route
 from routers.converse import app as converse_route
 from routers.dashboard import app as dashboard_route
+from routers.eventconverse import app as eventconverse_route

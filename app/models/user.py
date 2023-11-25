@@ -16,6 +16,7 @@ class User(Base):
     location = Column(String, nullable=True)
     is_active = Column(Boolean, default=True)
     converse = relationship("Converse", back_populates='user')
+    eventconverse = relationship("eventConverse", back_populates='user')
     created_at = Column(DateTime,nullable=True, default=datetime.now, name="created_at")    
     # owner = relationship("Discussion", back_populates="user")
     # created_at = Column(DateTime, default=datetime.now, name="created_at")
