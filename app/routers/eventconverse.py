@@ -88,6 +88,7 @@ def add_discussion(converse: addConverse, db: Session = Depends(get_db), current
 
 @app.put("/set_like")
 async def set_like( request_data: setLike, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    print(request_data.converse_id)
     # converse = db.query(Converse).filter(id = request_data.converse_id, user_id = current_user.id).first()
     converse = db.query(eventConverse).filter(eventConverse.id == request_data.converse_id, eventConverse.user_id == current_user.id).first()
     

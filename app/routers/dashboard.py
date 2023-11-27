@@ -7,7 +7,7 @@ import json
 from typing import List
 import datetime
 from crud import get_current_user, get_chats, create_chat, like_chat
-from models import User, Converse
+from models import User, Converse, eventConverse
 from schemas import MessageRequest
 import pandas as pd
 from fastapi.responses import StreamingResponse # Add to Top
@@ -48,6 +48,20 @@ def count_converse(db: Session = Depends(get_db)):
     liked_converse_count = db.query(Converse).filter_by(isliked = True).count()
     disliked_converse = db.query(Converse).filter_by(isliked = False).all()
     disliked_converse_count = db.query(Converse).filter_by(isliked = False).count()
+
+    # query = len(db.query(User).all())
+    con = converses.reverse()
+    return {"converses":converses,"count_converse":count_converse, "liked_converse":liked_converse,"liked_converse_count":liked_converse_count,"disliked_converse":disliked_converse, "disliked_converse_count":disliked_converse_count   }
+
+
+@app.get("/eventconversestats", status_code=status.HTTP_200_OK)
+def count_converse(db: Session = Depends(get_db)):
+    converses = db.query(eventConverse).all()
+    count_converse = db.query(eventConverse).count()
+    liked_converse = db.query(eventConverse).filter_by(isliked = True).all()
+    liked_converse_count = db.query(eventConverse).filter_by(isliked = True).count()
+    disliked_converse = db.query(eventConverse).filter_by(isliked = False).all()
+    disliked_converse_count = db.query(eventConverse).filter_by(isliked = False).count()
 
     # query = len(db.query(User).all())
     con = converses.reverse()
